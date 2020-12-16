@@ -12,6 +12,13 @@ class Interface(Frame):
         self.canvas = Canvas(self, bg='white', width=490, height=490)
         self.canvas.pack(expand=False, side='bottom')
         self.drawGrid()
+        self.canvas.bind("<Button-1>", self.clicGrille)
+
+        # Widgets
+
+        self.entry = Entry(window, bg='grey')
+
+
 
     def drawGrid(self):
         for i in range(10):
@@ -28,3 +35,15 @@ class Interface(Frame):
             x1 = 490 - 20
             y1 = 20 + i * 50
             self.canvas.create_line(x0, y0, x1, y1, fill=color)
+
+    def clicGrille(self, event):
+        x_clic = event.x
+        y_clic = event.y
+
+        # TODO ici on teste les coordonnees du clic et on voit dans quelle case l'user a clique
+        # x_case = ??
+        # y_case = ??
+
+        # self.entry.x = x_clic
+        # self.entry.y = y_clic
+        self.entry.pack()
