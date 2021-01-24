@@ -1,9 +1,11 @@
 from Interface import *
+from Sudoku import *
 from tkinter import *
 
 window = Tk()
 window.title("Sudoku des personnes agées.")
-interface = Interface(window)
+sudoku = Sudoku()
+interface = Interface(window, sudoku)
 
 window.mainloop()
 

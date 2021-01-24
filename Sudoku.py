@@ -1,12 +1,16 @@
 from random import randrange
 import pickle
 
+# TODO:
+# - generer les grilles de facon aleatoire
+
 class Sudoku:
 
     def __init__(self):
         self.__guess = []
         self.__solution = []
         self.__level = 1
+        self.__size = 9
 
     # setters
     def setGuess(self, grid):
@@ -18,6 +22,9 @@ class Sudoku:
     def setLevel(self, level):
         self.__level = level
 
+    def setSize(self, n):
+        self.__size = n
+
     # getters
     def getGuess(self):
         return self.__guess
@@ -27,6 +34,9 @@ class Sudoku:
 
     def getLevel(self):
         return self.__level
+
+    def getSize(self):
+        return self.__size
 
     # methodes metier
 
@@ -44,6 +54,9 @@ class Sudoku:
             while currentLine != "":
                 self.__solution.append(currentLine.split(";")[:-1])
                 currentLine = file.readline()
+
+        # set the corresponding size
+        self.__size = len(self.__solution)
 
         # generate the corresponding player's grid
         self.setGuess([['X' for i in self.__solution] for j in self.__solution])
