@@ -102,3 +102,13 @@ class Sudoku:
         self.setSolution(gameData["solution"])
         self.setGuess(gameData["guess"])
         self.setLevel(gameData["level"])
+
+    def check(self):
+        colors = [['' for i in self.__solution] for j in self.__solution]
+        for i in colors:
+            for j in colors:
+                if self.__guess[i][j] == 'X':
+                    continue
+                else:
+                    colors[i][j] = 'green' if self.__guess[i][j] == self.__solution[i][j] else 'red';
+        return colors

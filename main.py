@@ -4,8 +4,7 @@ from tkinter import *
 
 window = Tk()
 window.title("Sudoku des personnes agées.")
-sudoku = Sudoku()
-interface = Interface(window, sudoku)
+interface = Interface(window)
 
 window.mainloop()
 
