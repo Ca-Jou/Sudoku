@@ -55,6 +55,10 @@ class Sudoku:
                 self.__solution.append(currentLine.split(";")[:-1])
                 currentLine = file.readline()
 
+        for i in range(0, len(self.__solution)):
+            for j in range(0, len(self.__solution)):
+                self.__solution[i][j] = int(self.__solution[i][j])
+
         # set the corresponding size
         self.__size = len(self.__solution)
 
@@ -75,12 +79,13 @@ class Sudoku:
             j = randrange(0, len(self.__guess) - 1)
             self.__guess[i][j] = self.__solution[i][j]
 
-    def fill(self, n, line, column):
-        if line in range(1, len(self.__guess) + 1) and column in range(1, len(self.__guess) + 1):
-            self.__guess[line - 1][column - 1] = n
+    def fill(self, n, i, j):
+        if i in range(0, len(self.__guess)) and j in range(0, len(self.__guess)):
+            self.__guess[i][j] = n
 
     def win(self):
-        return self.getGuess() == self.getSolution()
+        # return self.getGuess() == self.getSolution()
+        return True
 
     def saveGame(self, name):
         gameData = {
@@ -104,11 +109,11 @@ class Sudoku:
         self.setLevel(gameData["level"])
 
     def check(self):
-        colors = [['' for i in self.__solution] for j in self.__solution]
-        for i in colors:
-            for j in colors:
+        ok = [[False for i in self.__solution] for j in self.__solution]
+        for i in range(0, len(ok)):
+            for j in range(0, len(ok[i])):
                 if self.__guess[i][j] == 'X':
                     continue
                 else:
-                    colors[i][j] = 'green' if self.__guess[i][j] == self.__solution[i][j] else 'red';
-        return colors
+                    ok[i][j] = (self.__guess[i][j] == self.__solution[i][j])
+        return ok

@@ -22,15 +22,17 @@ class Interface(Frame):
 
         self.canvas = Canvas(self, bg='white', width=490, height=490)
         self.canvas.pack(expand=False, side='left')
-        self.drawGrid()
-        self.canvas.bind("<Button-1>", self.clicGrid)
 
         # Widgets
 
-        self.entry = Entry(window, bg='grey')
-        self.entry.bind("<Return>", self.fillGrid)
+        self.numbers = [[] for i in range(0, 9)]
+        for i in range(0, 9):
+            for j in range(0, 9):
+                self.numbers[i].append(Entry(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), highlightthickness=0, justify='center'))
+                self.numbers[i][j].bind('<Return>', self.fillGrid)
+        self.drawGrid()
 
-        self.new_button = Button(self, text="New game", width=15, command=self.newGame())
+        self.new_button = Button(self, text="New game", width=15, command=self.newGame)
         self.new_button.pack()
 
         self.check_button = Button(self, text="Check grid", width=15, command=self.checkGrid)
@@ -39,7 +41,7 @@ class Interface(Frame):
         self.quit_button = Button(self, text="Quit", width=15, command=self.quit)
         self.quit_button.pack(side='bottom')
 
-        self.text_widget = Text(window)
+        self.text_widget = Label(window)
 
     def drawGrid(self):
         for i in range(10):
@@ -67,61 +69,59 @@ class Interface(Frame):
 
     def showGuessedNumbers(self):
 
-        #clear the canvas and redraw the grid
+        # clear the canvas
         self.canvas.delete(ALL)
-        self.drawGrid()
 
         # draw the numbers of the Sudoku.guessed matrix on the canvas
         # TODO trouver un moyen de degager la bordure!!!
         # TODO bind la saisie de texte a la MaJ de la matrice sudoku.guessed
         i, j = 0, 0
         for line in self.sudoku.getGuess():
-            for column in line:
-                x_nb = 20 + i * 50
-                y_nb = 20 + j * 50
-                nb = Text(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), bd=0)
-                nb.tag_configure("center", justify='center', offset=-30)
-                nb.insert('end', column)
-                nb.tag_add("center", "1.0", "end")
-                nb.place(x=x_nb, y=y_nb, width=50, height=50)
-                i += 1
-            i = 0
-            j += 1
+            for number in line:
+                x_nb = 20 + j * 50
+                y_nb = 20 + i * 50
+                self.numbers[i][j].delete(0, 'end')
+                self.numbers[i][j].configure(fg='black')
+                self.numbers[i][j].insert('end', number)
+                self.numbers[i][j].place(x=x_nb, y=y_nb, width=50, height=50)
+                j += 1
+            j = 0
+            i += 1
 
-    def clicGrid(self, event):
-        x_clic = event.x
-        y_clic = event.y
-
-        # TODO on donne les cooordonnees du clic au champ de saisie de texte
-        # self.entry.x = x_clic
-        # self.entry.y = y_clic
-
-        self.entry.pack()
+        #  redraw the grid
+        self.drawGrid()
 
     def fillGrid(self, event):
         # retrieve the user entry
-        userNb = self.entry.get()
+        newNb = event.widget.get()
+        print(newNb)
         maxNb = self.sudoku.getSize()
 
+        j = int((event.widget.winfo_x() - 20) / 50)
+        i = int((event.widget.winfo_y() - 20) / 50)
+
+        oldNb = self.sudoku.getGuess()[i][j]
+
         try:
-            userNb = int(userNb)
-            if (userNb > maxNb):
+            newNb = int(newNb)
+            if (newNb > maxNb):
                 raise ValueError()
+            self.sudoku.fill(newNb, i, j)
+            self.numbers[i][j].configure(fg='black')
+            self.canvas.focus_set()
         except ValueError:
-            self.text_widget.delete(0)
-            self.text_widget.insert(END, "Please enter an integer between 1 and {}.".format(maxNb), foreground="red")
-            self.text_widget.pack()
-            userNb = self.entry.get()
-
-        # retrieve the coordinates of the entry field (upper left corner), and deduce the line and column modified in the Sudoku guess matrix
-        x_entry = self.entry.winfo_x()
-        y_entry = self.entry.winfo_y()
-        line = (x_entry - 20) / 50
-        column = (y_entry - 20) / 50
-
-        # save the user entry in their Sudoku matrix
-        self.sudoku.fill(userNb, line, column)
+            event.widget.delete(0, 'end')
+            event.widget.insert(0, oldNb)
+            self.canvas.focus_set()
 
     def checkGrid(self):
-        # TODO coder cette fonction
-        pass
+        ok = self.sudoku.check()
+        for i in range(0, len(ok)):
+            for j in range(0, len(ok[i])):
+                if ok[i][j]:
+                    self.numbers[i][j].configure(fg="green")
+                else:
+                    self.numbers[i][j].configure(fg="red")
+        if self.sudoku.win():
+            self.text_widget["text"] = "Félicitations !!!"
+            self.text_widget.pack()
