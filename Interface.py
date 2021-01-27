@@ -1,10 +1,10 @@
 from tkinter import *
 import tkinter.font as tkfont
+from PIL import (Image, ImageTk)
+from datetime import datetime
+import tkinter.filedialog
+
 from Sudoku import *
-
-
-# TODO:
-# - bouton enregistrer
 
 
 class Interface(Frame):
@@ -17,21 +17,26 @@ class Interface(Frame):
         self.pack()
 
         # Canvas
-
         self.canvas = Canvas(self, bg='white', width=490, height=490)
         self.canvas.pack(expand=False, side='left')
 
         # Widgets
-
         self.numbers = [[] for i in range(0, 9)]
         for i in range(0, 9):
             for j in range(0, 9):
-                self.numbers[i].append(Entry(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), highlightthickness=0, justify='center'))
+                self.numbers[i].append(Entry(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), highlightthickness=0, justify='center', cursor='heart'))
+                self.numbers[i][j].bind('<Button-1>', self.selectNb)
                 self.numbers[i][j].bind('<Return>', self.fillGrid)
         self.drawGrid()
 
         self.new_button = Button(self, text="New game", width=15, command=self.newGame)
         self.new_button.pack()
+
+        self.load_button = Button(self, text="Load game", width=15, command=self.loadGame)
+        self.load_button.pack()
+
+        self.load_button = Button(self, text="Save game", width=15, command=self.saveGame)
+        self.load_button.pack()
 
         self.check_button = Button(self, text="Check grid", width=15, command=self.checkGrid)
         self.check_button.pack()
@@ -42,6 +47,12 @@ class Interface(Frame):
         self.text_widget = Label(window)
 
     def drawGrid(self):
+        # wonderful background
+        unicorn = Image.open("0-Files/kawaii_unicorn.jpg")
+        bgImage = ImageTk.PhotoImage(unicorn)
+        self.canvas.create_image(20, 20, image=bgImage, anchor=NW)
+        
+        # grid
         for i in range(10):
             color = "black" if i % 3 == 0 else "gray"
 
@@ -58,12 +69,22 @@ class Interface(Frame):
             self.canvas.create_line(x0, y0, x1, y1, fill=color)
 
     def newGame(self):
-        self.sudoku.newGame()
+        self.text_widget.pack_forget()
+        src_path = tkinter.filedialog.askopenfilename()
+        self.sudoku.newGame(src_path)
         self.showGuessedNumbers()
 
     def loadGame(self):
-        self.sudoku.loadGame()
+        self.text_widget.pack_forget()
+        src_path = tkinter.filedialog.askopenfilename()
+        self.sudoku.loadGame(src_path)
         self.showGuessedNumbers()
+
+    def saveGame(self):
+        fileName = tkinter.filedialog.asksaveasfilename(defaultextension='.txt')
+        self.sudoku.saveGame(fileName)
+        self.text_widget["text"] = "Votre partie a ete sauvegardee dans le fichier " + fileName
+        self.text_widget.pack()
 
     def showGuessedNumbers(self):
 
@@ -78,7 +99,10 @@ class Interface(Frame):
                 x_nb = 20 + j * 50
                 y_nb = 20 + i * 50
                 self.numbers[i][j].delete(0, 'end')
-                self.numbers[i][j].configure(fg='black')
+                if self.sudoku.getInitNb()[i][j]:
+                    self.numbers[i][j].configure(fg='deep sky blue')
+                else:
+                    self.numbers[i][j].configure(fg='black')
                 self.numbers[i][j].insert('end', number)
                 self.numbers[i][j].place(x=x_nb, y=y_nb, width=50, height=50)
                 j += 1
@@ -88,10 +112,12 @@ class Interface(Frame):
         #  redraw the grid
         self.drawGrid()
 
+    def selectNb(self, event):
+        event.widget.delete(0, 'end')
+
     def fillGrid(self, event):
         # retrieve the user entry
         newNb = event.widget.get()
-        print(newNb)
         maxNb = self.sudoku.getSize()
 
         j = int((event.widget.winfo_x() - 20) / 50)
@@ -115,10 +141,12 @@ class Interface(Frame):
         ok = self.sudoku.check()
         for i in range(0, len(ok)):
             for j in range(0, len(ok[i])):
-                if ok[i][j]:
-                    self.numbers[i][j].configure(fg="green")
+                if self.sudoku.getInitNb()[i][j]:
+                    continue
+                elif ok[i][j]:
+                    self.numbers[i][j].configure(fg="seagreen3")
                 else:
-                    self.numbers[i][j].configure(fg="red")
+                    self.numbers[i][j].configure(fg="brown1")
         if self.sudoku.win():
-            self.text_widget["text"] = "Félicitations !!!"
+            self.text_widget["text"] = "Good job B*tch !"
             self.text_widget.pack()

@@ -11,6 +11,7 @@ class Sudoku:
         self.__solution = []
         self.__level = 1
         self.__size = 9
+        self.__initNb = []
 
     # setters
     def setGuess(self, grid):
@@ -25,6 +26,9 @@ class Sudoku:
     def setSize(self, n):
         self.__size = n
 
+    def setInitNb(self, grid):
+        self.__initNb = grid
+
     # getters
     def getGuess(self):
         return self.__guess
@@ -38,18 +42,22 @@ class Sudoku:
     def getSize(self):
         return self.__size
 
+    def getInitNb(self):
+        return self.__initNb
+
     # methodes metier
 
     def clearGame(self):
         self.__solution.clear()
         self.__guess.clear()
+        self.__initNb.clear()
 
-    def newGame(self):
+    def newGame(self, name):
         # generate a sudoku grid
         # at first we load it from a file
         self.clearGame()
 
-        with open("solucegrille.txt", "r") as file:
+        with open(name, "r") as file:
             currentLine = file.readline()
             while currentLine != "":
                 self.__solution.append(currentLine.split(";")[:-1])
@@ -64,6 +72,7 @@ class Sudoku:
 
         # generate the corresponding player's grid
         self.setGuess([['X' for i in self.__solution] for j in self.__solution])
+        self.setInitNb([[False for i in self.__solution] for j in self.__solution])
 
         # show randomized numbers in the player's grid -> the bigger the level of difficulty, the less values we show
         n = 0
@@ -78,6 +87,7 @@ class Sudoku:
             i = randrange(0, len(self.__guess) - 1)
             j = randrange(0, len(self.__guess) - 1)
             self.__guess[i][j] = self.__solution[i][j]
+            self.__initNb[i][j] = True
 
     def fill(self, n, i, j):
         if i in range(0, len(self.__guess)) and j in range(0, len(self.__guess[i])):
@@ -89,6 +99,7 @@ class Sudoku:
     def saveGame(self, name):
         gameData = {
             "solution": self.getSolution(),
+            "initnb": self.getInitNb(),
             "guess": self.getGuess(),
             "level": self.getLevel()
         }
@@ -104,6 +115,7 @@ class Sudoku:
             gameData = unpickler.load()
 
         self.setSolution(gameData["solution"])
+        self.setInitNb(gameData["initnb"])
         self.setGuess(gameData["guess"])
         self.setLevel(gameData["level"])
 

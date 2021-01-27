@@ -3,7 +3,7 @@ from Sudoku import *
 from tkinter import *
 
 window = Tk()
-window.title("Sudoku des personnes agées.")
+window.title("SudoKawaii")
 interface = Interface(window)
 
 window.mainloop()
