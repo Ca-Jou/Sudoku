@@ -4,9 +4,7 @@ from Sudoku import *
 
 
 # TODO:
-# - bouton nouvelle partie
 # - bouton enregistrer
-# - bouton verifier la grille
 
 
 class Interface(Frame):
@@ -74,7 +72,6 @@ class Interface(Frame):
 
         # draw the numbers of the Sudoku.guessed matrix on the canvas
         # TODO trouver un moyen de degager la bordure!!!
-        # TODO bind la saisie de texte a la MaJ de la matrice sudoku.guessed
         i, j = 0, 0
         for line in self.sudoku.getGuess():
             for number in line:

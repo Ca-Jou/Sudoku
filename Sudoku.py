@@ -80,12 +80,11 @@ class Sudoku:
             self.__guess[i][j] = self.__solution[i][j]
 
     def fill(self, n, i, j):
-        if i in range(0, len(self.__guess)) and j in range(0, len(self.__guess)):
+        if i in range(0, len(self.__guess)) and j in range(0, len(self.__guess[i])):
             self.__guess[i][j] = n
 
     def win(self):
-        # return self.getGuess() == self.getSolution()
-        return True
+        return self.getGuess() == self.getSolution()
 
     def saveGame(self, name):
         gameData = {
