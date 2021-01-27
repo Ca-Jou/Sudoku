@@ -35,14 +35,14 @@ class Interface(Frame):
         self.load_button = Button(self, text="Load game", width=15, command=self.loadGame)
         self.load_button.pack()
 
-        self.load_button = Button(self, text="Save game", width=15, command=self.saveGame)
-        self.load_button.pack()
-
         self.check_button = Button(self, text="Check grid", width=15, command=self.checkGrid)
         self.check_button.pack()
 
         self.quit_button = Button(self, text="Quit", width=15, command=self.quit)
         self.quit_button.pack(side='bottom')
+
+        self.load_button = Button(self, text="Save game", width=15, command=self.saveGame)
+        self.load_button.pack(side='bottom')
 
         self.text_widget = Label(window)
 
@@ -51,7 +51,7 @@ class Interface(Frame):
         unicorn = Image.open("0-Files/kawaii_unicorn.jpg")
         bgImage = ImageTk.PhotoImage(unicorn)
         self.canvas.create_image(20, 20, image=bgImage, anchor=NW)
-        
+
         # grid
         for i in range(10):
             color = "black" if i % 3 == 0 else "gray"
