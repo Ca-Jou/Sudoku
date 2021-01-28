@@ -31,6 +31,11 @@ class Interface(Frame):
                 self.numbers[i][j].bind('<Button-1>', self.selectNb)
                 self.numbers[i][j].bind('<Return>', self.fillGrid)
 
+        self.hints = [[] for i in range(0, 9)]
+        for i in range(0, 9):
+            for j in range(0, 9):
+                self.hints[i].append(Entry(self.canvas, background='white', foreground='snow4', font=tkfont.Font(family='Arial', size=10), highlightthickness=0, borderwidth=0, justify='left', cursor='pencil'))
+
         self.new_button = Button(self, text="New game", width=15, command=self.newGame)
         self.new_button.pack()
 
@@ -110,6 +115,11 @@ class Interface(Frame):
                 j += 1
             j = 0
             i += 1
+
+        # hints
+        for i in range(0, 9):
+            for j in range(0, 9):
+                self.hints[i][j].place(x=25+i*50, y=21+j*50, width=40, height=10)
 
         #  redraw the grid
         self.drawGrid()
