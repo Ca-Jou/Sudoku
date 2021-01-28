@@ -1,9 +1,6 @@
 from random import randrange
 import pickle
 
-# TODO:
-# - generer les grilles de facon aleatoire
-
 class Sudoku:
 
     def __init__(self):
