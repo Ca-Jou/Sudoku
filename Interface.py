@@ -39,6 +39,7 @@ class Interface(Frame):
                 self.numbers[i].append(Entry(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), highlightthickness=0, borderwidth=0, justify='center', cursor='heart'))
                 self.numbers[i][j].bind('<Button-1>', self.selectNb)
                 self.numbers[i][j].bind('<Return>', self.fillGrid)
+                self.numbers[i][j].bind('<FocusOut>', self.fillGrid)
 
         self.hints = [[] for i in range(0, self.sudoku.getSize())]
         for i in range(0, self.sudoku.getSize()):
@@ -129,6 +130,7 @@ class Interface(Frame):
 
     def selectNb(self, event):
         event.widget.delete(0, 'end')
+        event.widget.configure(fg='black')
 
     def fillGrid(self, event):
         # retrieve the user entry
