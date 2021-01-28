@@ -71,7 +71,7 @@ class Sudoku:
         self.__size = len(self.__solution)
 
         # generate the corresponding player's grid
-        self.setGuess([['X' for i in self.__solution] for j in self.__solution])
+        self.setGuess([['' for i in self.__solution] for j in self.__solution])
         self.setInitNb([[False for i in self.__solution] for j in self.__solution])
 
         # show randomized numbers in the player's grid -> the bigger the level of difficulty, the less values we show
@@ -123,7 +123,7 @@ class Sudoku:
         ok = [[False for i in self.__solution] for j in self.__solution]
         for i in range(0, len(ok)):
             for j in range(0, len(ok[i])):
-                if self.__guess[i][j] == 'X':
+                if self.__guess[i][j] == '':
                     continue
                 else:
                     ok[i][j] = (self.__guess[i][j] == self.__solution[i][j])

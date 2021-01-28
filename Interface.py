@@ -17,17 +17,19 @@ class Interface(Frame):
         self.pack()
 
         # Canvas
-        self.canvas = Canvas(self, bg='white', width=490, height=490)
+        self.canvas = Canvas(self, bg='white', width=490, height=490, highlightthickness=0, bd=0, relief='ridge')
         self.canvas.pack(expand=False, side='left')
+
+        # grid
+        self.drawGrid()
 
         # Widgets
         self.numbers = [[] for i in range(0, 9)]
         for i in range(0, 9):
             for j in range(0, 9):
-                self.numbers[i].append(Entry(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), highlightthickness=0, justify='center', cursor='heart'))
+                self.numbers[i].append(Entry(self.canvas, background='white', foreground='black', font=tkfont.Font(family='Arial', size=25), highlightthickness=0, borderwidth=0, justify='center', cursor='heart'))
                 self.numbers[i][j].bind('<Button-1>', self.selectNb)
                 self.numbers[i][j].bind('<Return>', self.fillGrid)
-        self.drawGrid()
 
         self.new_button = Button(self, text="New game", width=15, command=self.newGame)
         self.new_button.pack()
@@ -93,7 +95,6 @@ class Interface(Frame):
         self.canvas.delete(ALL)
 
         # draw the numbers of the Sudoku.guessed matrix on the canvas
-        # TODO trouver un moyen de degager la bordure!!!
         i, j = 0, 0
         for line in self.sudoku.getGuess():
             for number in line:
@@ -105,7 +106,7 @@ class Interface(Frame):
                 else:
                     self.numbers[i][j].configure(fg='black')
                 self.numbers[i][j].insert('end', number)
-                self.numbers[i][j].place(x=x_nb, y=y_nb, width=50, height=50)
+                self.numbers[i][j].place(x=x_nb+5, y=y_nb+5, width=40, height=40)
                 j += 1
             j = 0
             i += 1
@@ -121,8 +122,8 @@ class Interface(Frame):
         newNb = event.widget.get()
         maxNb = self.sudoku.getSize()
 
-        j = int((event.widget.winfo_x() - 20) / 50)
-        i = int((event.widget.winfo_y() - 20) / 50)
+        j = int((event.widget.winfo_x() - 25) / 50)
+        i = int((event.widget.winfo_y() - 25) / 50)
 
         oldNb = self.sudoku.getGuess()[i][j]
 
