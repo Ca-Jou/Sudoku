@@ -48,9 +48,10 @@ class Interface(Frame):
 
     def drawGrid(self):
         # wonderful background
-        unicorn = Image.open("0-Files/kawaii_unicorn.jpg")
+        unicorn = Image.open("0-Files/kawaii_unicorn.jpg").resize((490, 490), Image.ANTIALIAS)
         bgImage = ImageTk.PhotoImage(unicorn)
-        self.canvas.create_image(20, 20, image=bgImage, anchor=NW)
+        self.canvas.image = bgImage
+        self.canvas.create_image(0, 0, image=bgImage, anchor=NW)
 
         # grid
         for i in range(10):
