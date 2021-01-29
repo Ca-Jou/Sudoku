@@ -8,6 +8,4 @@ interface = Interface(window)
 
 window.mainloop()
 
-# TODO tester la win
-
 window.destroy()

@@ -1,13 +1,14 @@
 from random import randrange
 import pickle
 
+
 class Sudoku:
 
     def __init__(self):
         self.__guess = []
         self.__solution = []
         self.__level = 1
-        self.__size = 9
+        self.__size = 0
         self.__initNb = []
 
     # setters
@@ -60,10 +61,6 @@ class Sudoku:
                 self.__solution.append(currentLine.split(";")[:-1])
                 currentLine = file.readline()
 
-        for i in range(0, len(self.__solution)):
-            for j in range(0, len(self.__solution)):
-                self.__solution[i][j] = int(self.__solution[i][j])
-
         # set the corresponding size
         self.__size = len(self.__solution)
 
@@ -98,7 +95,8 @@ class Sudoku:
             "solution": self.getSolution(),
             "initnb": self.getInitNb(),
             "guess": self.getGuess(),
-            "level": self.getLevel()
+            "level": self.getLevel(),
+            "size": self.getSize()
         }
         with open(name, "wb") as file:
             pickler = pickle.Pickler(file)
@@ -107,14 +105,18 @@ class Sudoku:
     def loadGame(self, name):
         self.clearGame()
 
-        with open(name, "rb") as file:
-            unpickler = pickle.Unpickler(file)
-            gameData = unpickler.load()
+        try:
+            with open(name, "rb") as file:
+                unpickler = pickle.Unpickler(file)
+                gameData = unpickler.load()
 
-        self.setSolution(gameData["solution"])
-        self.setInitNb(gameData["initnb"])
-        self.setGuess(gameData["guess"])
-        self.setLevel(gameData["level"])
+            self.setSolution(gameData["solution"])
+            self.setInitNb(gameData["initnb"])
+            self.setGuess(gameData["guess"])
+            self.setLevel(gameData["level"])
+            self.setSize(gameData["size"])
+        except TypeError as exception:
+            print("Unable to load game")
 
     def check(self):
         ok = [[False for i in self.__solution] for j in self.__solution]
@@ -125,3 +127,9 @@ class Sudoku:
                 else:
                     ok[i][j] = (self.__guess[i][j] == self.__solution[i][j])
         return ok
+
+    def isValid(self, nb):
+        if self.getSize() == 9:
+            return nb in "123456789" and len(nb) == 1
+        if self.getSize() == 16:
+            return nb in "123456789ABCDEF" and len(nb) == 1
