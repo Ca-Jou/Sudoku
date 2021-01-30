@@ -115,7 +115,7 @@ class Sudoku:
             self.setGuess(gameData["guess"])
             self.setLevel(gameData["level"])
             self.setSize(gameData["size"])
-        except TypeError as exception:
+        except TypeError:
             print("Unable to load game")
 
     def check(self):

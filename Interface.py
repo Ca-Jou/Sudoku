@@ -50,7 +50,8 @@ class Interface(Frame):
         self.text_widget = Label(window)
 
     def hydrate(self):
-        # this method is used to hydrate GUI attributes that depend on the sudoku size - and thus on the choice of grid size made by the user AFTER initiating the GUI
+        # this method is used to hydrate GUI attributes that depend on the sudoku size
+        # - and thus on the choice of grid size made by the user AFTER initiating the GUI
         # Canvas
         self.canvas.configure(width=40+50*self.sudoku.getSize(), height=40+50*self.sudoku.getSize())
 
@@ -74,6 +75,8 @@ class Interface(Frame):
                                            borderwidth=0, justify='left', cursor='pencil'))
 
     def drawGrid(self):
+        color = ""
+        width = 1
         for i in range(0, self.sudoku.getSize()+1):
             if self.sudoku.getSize() == 9:
                 color = "black" if i % 3 == 0 else "gray"
