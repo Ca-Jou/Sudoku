@@ -77,7 +77,7 @@ class Sudoku:
         elif self.__level == 3:
             n = 17  # minimal number of values that have to be shown for the problem to be minimal, according to Gordon Royle (source Wikipedia - Mathematiques du sudoku)
 
-        for count in range(0, n):
+        for count in range(0, n + 1):
             i = randrange(0, len(self.__guess) - 1)
             j = randrange(0, len(self.__guess) - 1)
             self.__guess[i][j] = self.__solution[i][j]

@@ -48,6 +48,8 @@ class Interface(Frame):
         self.load_button.pack(side='bottom')
 
         self.text_widget = Label(window)
+        self.level_text = Label(window, text="Choose your level: (1 / 2 / 3)")
+        self.level_select = Entry(window, width=15, justify='center', cursor='heart')
 
     def hydrate(self):
         # this method is used to hydrate GUI attributes that depend on the sudoku size
@@ -99,7 +101,28 @@ class Interface(Frame):
 
     def newGame(self):
         self.text_widget.pack_forget()
+
+        # make the user choose the level
+        self.level_text.pack()
+        self.level_select.pack()
+        self.level_select.bind('<Return>', self.setLevel)
+
+    def setLevel(self, event):
+
+        try:
+            level = int(event.widget.get())
+            if level not in range(1, 4):
+                raise ValueError()
+            self.sudoku.setLevel(level)
+        except ValueError:
+            self.level_select.pack_forget()
+            self.level_text.configure(text="Error! Level was set to 1.")
+            self.sudoku.setLevel(1)
+
+        # make the user choose the grid
         src_path = tkinter.filedialog.askopenfilename()
+
+        # start the sudoku game
         self.sudoku.newGame(src_path)
         self.__inGame = True
         self.hydrate()
