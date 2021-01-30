@@ -71,17 +71,22 @@ class Sudoku:
         # show randomized numbers in the player's grid -> the bigger the level of difficulty, the less values we show
         n = 0
         if self.__level == 1:
-            n = 25
+            n = 25 if self.getSize() == 9 else 90
         elif self.__level == 2:
-            n = 20
+            n = 20 if self.getSize() == 9 else 75
         elif self.__level == 3:
-            n = 17  # minimal number of values that have to be shown for the problem to be minimal, according to Gordon Royle (source Wikipedia - Mathematiques du sudoku)
+            n = 17 if self.getSize() == 9 else 64 # minimal number of values that have to be shown for the problem to be minimal, according to Gordon Royle (source Wikipedia - Mathematiques du sudoku)
 
-        for count in range(0, n + 1):
+        count = 1
+        while count <= n:
             i = randrange(0, len(self.__guess) - 1)
             j = randrange(0, len(self.__guess) - 1)
+            while self.__initNb[i][j]:
+                i = randrange(0, len(self.__guess) - 1)
+                j = randrange(0, len(self.__guess) - 1)
             self.__guess[i][j] = self.__solution[i][j]
             self.__initNb[i][j] = True
+            count += 1
 
     def fill(self, n, i, j):
         if i in range(0, len(self.__guess)) and j in range(0, len(self.__guess[i])):
