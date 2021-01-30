@@ -1,9 +1,8 @@
 from tkinter import *
 import tkinter.font as tkfont
+import tkinter.filedialog
 from PIL import (Image, ImageTk)
 from datetime import datetime
-import tkinter.filedialog
-
 from Sudoku import *
 
 
@@ -28,7 +27,7 @@ class Interface(Frame):
         self.canvas.image = bgImage
         self.canvas.create_image(0, 0, image=bgImage, anchor=NW)
 
-        # Widgets
+        # Widgets shown from the start
         self.numbers = []
         self.hints = []
 
@@ -47,13 +46,14 @@ class Interface(Frame):
         self.load_button = Button(self, text="Save game", width=15, command=self.saveGame)
         self.load_button.pack(side='bottom')
 
+        # Widgets to be packed later
         self.text_widget = Label(window)
         self.level_text = Label(window, text="Choose your level: (1 / 2 / 3)")
         self.level_select = Entry(window, width=15, justify='center', cursor='heart')
 
+    # this method is used to hydrate GUI attributes that depend on the sudoku size
+    # - and thus on the choice of grid size made by the user AFTER initiating the GUI
     def hydrate(self):
-        # this method is used to hydrate GUI attributes that depend on the sudoku size
-        # - and thus on the choice of grid size made by the user AFTER initiating the GUI
         # Canvas
         self.canvas.configure(width=40+50*self.sudoku.getSize(), height=40+50*self.sudoku.getSize())
 
@@ -76,9 +76,11 @@ class Interface(Frame):
                                            font=tkfont.Font(family='Arial', size=10), highlightthickness=0,
                                            borderwidth=0, justify='left', cursor='pencil'))
 
+    # This method's role is to draw the sudoku grid depending on the size of the sudoku
     def drawGrid(self):
         color = ""
         width = 1
+
         for i in range(0, self.sudoku.getSize()+1):
             if self.sudoku.getSize() == 9:
                 color = "black" if i % 3 == 0 else "gray"
@@ -99,6 +101,7 @@ class Interface(Frame):
             y1 = 20 + i * 50
             self.canvas.create_line(x0, y0, x1, y1, fill=color, width=width)
 
+    # This method makes the user choose the level to initiate a new game
     def newGame(self):
         self.text_widget.pack_forget()
 
@@ -107,8 +110,8 @@ class Interface(Frame):
         self.level_select.pack()
         self.level_select.bind('<Return>', self.setLevel)
 
+    # This method finishes new game initiation
     def setLevel(self, event):
-
         try:
             level = int(event.widget.get())
             if level not in range(1, 4):
@@ -128,6 +131,7 @@ class Interface(Frame):
         self.hydrate()
         self.showGuessedNumbers()
 
+    # This method lets the user load a pre-saved game from a txt file
     def loadGame(self):
         self.text_widget.pack_forget()
         src_path = tkinter.filedialog.askopenfilename()
@@ -136,17 +140,17 @@ class Interface(Frame):
         self.hydrate()
         self.showGuessedNumbers()
 
+    # This method lets the user save its ongoing game in a txt file
     def saveGame(self):
         fileName = tkinter.filedialog.asksaveasfilename(defaultextension='.txt')
         self.sudoku.saveGame(fileName)
         self.text_widget["text"] = "Votre partie a ete sauvegardee dans le fichier " + fileName
         self.text_widget.pack()
 
+    # This method shows the user's guessed numbers onto the canvas
     def showGuessedNumbers(self):
         # clear the canvas
         self.canvas.delete(ALL)
-
-        #  redraw the grid
         self.drawGrid()
 
         # draw the numbers of the Sudoku.guessed matrix on the canvas
@@ -171,10 +175,12 @@ class Interface(Frame):
             for j in range(0, self.sudoku.getSize()):
                 self.hints[i][j].place(x=25+i*50, y=21+j*50, width=40, height=10)
 
+    # This method deals with the user selecting an entry to type a number
     def selectNb(self, event):
         event.widget.delete(0, 'end')
         event.widget.configure(fg='black')
 
+    # This method retrieves the number entered by the user and stores it into the Sudoku.__guess matrix
     def fillGrid(self, event):
         # retrieve the user entry
         j = int((event.widget.winfo_x() - 25) / 50)
@@ -193,6 +199,8 @@ class Interface(Frame):
             event.widget.insert(0, oldNb)
             self.canvas.focus_set()
 
+    # This method lets the user compare their guesses to the solution and color-differentiates the numbers shown at
+    # game start, the correct ones and the wrong ones
     def checkGrid(self):
         if self.__inGame:
             ok = self.sudoku.check()
