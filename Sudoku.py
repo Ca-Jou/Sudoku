@@ -96,6 +96,7 @@ class Sudoku:
         return self.getGuess() == self.getSolution()
 
     def saveGame(self, name):
+        # save method, we concatenate all the necessary data in an object GameData
         gameData = {
             "solution": self.getSolution(),
             "initnb": self.getInitNb(),
@@ -103,6 +104,7 @@ class Sudoku:
             "level": self.getLevel(),
             "size": self.getSize()
         }
+        # save the object in file with module Pickle
         with open(name, "wb") as file:
             pickler = pickle.Pickler(file)
             pickler.dump(gameData)
@@ -123,6 +125,7 @@ class Sudoku:
         except TypeError:
             print("Unable to load game")
 
+    # compare the two matrices, that of the user and that of the solution
     def check(self):
         ok = [[False for i in self.__solution] for j in self.__solution]
         for i in range(0, len(ok)):
@@ -133,6 +136,7 @@ class Sudoku:
                     ok[i][j] = (self.__guess[i][j] == self.__solution[i][j])
         return ok
 
+    # check if the number is between 1 and 9 or a and e
     def isValid(self, nb):
         if self.getSize() == 9:
             return nb in "123456789" and len(nb) == 1
