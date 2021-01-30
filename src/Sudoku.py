@@ -43,7 +43,7 @@ class Sudoku:
     def getInitNb(self):
         return self.__initNb
 
-    # methodes metier
+    # bussiness method
 
     def clearGame(self):
         self.__solution.clear()
@@ -92,6 +92,7 @@ class Sudoku:
         if i in range(0, len(self.__guess)) and j in range(0, len(self.__guess[i])):
             self.__guess[i][j] = n
 
+
     def win(self):
         return self.getGuess() == self.getSolution()
 
@@ -109,6 +110,7 @@ class Sudoku:
             pickler = pickle.Pickler(file)
             pickler.dump(gameData)
 
+    # method to load game with txt file
     def loadGame(self, name):
         self.clearGame()
 

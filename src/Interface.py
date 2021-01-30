@@ -22,7 +22,7 @@ class Interface(Frame):
         self.canvas.pack(expand=False, side='left')
 
         # Wonderful welcoming background
-        unicorn = Image.open("0-Files/kawaii_unicorn.jpg").resize((500, 500), Image.ANTIALIAS)
+        unicorn = Image.open("../0-Files/kawaii_unicorn.jpg").resize((500, 500), Image.ANTIALIAS)
         bgImage = ImageTk.PhotoImage(unicorn)
         self.canvas.image = bgImage
         self.canvas.create_image(0, 0, image=bgImage, anchor=NW)

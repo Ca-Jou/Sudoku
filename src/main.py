@@ -1,5 +1,4 @@
 from Interface import *
-from Sudoku import *
 from tkinter import *
 
 window = Tk()
